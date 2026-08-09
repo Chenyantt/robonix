@@ -70,12 +70,12 @@ RUN set -eux; \
     rm -f /tmp/webots.deb; \
     rm -rf /var/lib/apt/lists/*
 
-# Keep the remote viewer in read-only W3D broadcast mode. The public stream
+# Keep the remote viewer in read-only W3D mode by default. The public stream
 # port is injected by viewer_server.py at runtime so custom ports work with
 # both host and bridge networking. Webots' raw stream remains on port 1234.
 RUN sed -i \
       -e 's#https://cyberbotics.com/wwi/R2025a/WebotsView.js#/wwi-full/WebotsView.js#' \
-      -e 's#</body>#<script>const wsPort=new URLSearchParams(location.search).get("wsPort")||"__WEBOTS_STREAM_PORT__";document.getElementById("IP-input").value="ws://"+location.hostname+":"+wsPort;document.getElementById("mode").value="w3d";document.getElementById("broadcast").checked=true;</script></body>#' \
+      -e 's#</body>#<script>const wsPort=new URLSearchParams(location.search).get("wsPort")||"__WEBOTS_STREAM_PORT__";document.getElementById("IP-input").value="ws://"+location.hostname+":"+wsPort;document.getElementById("mode").value="w3d";document.getElementById("broadcast").checked=false;</script></body>#' \
     /usr/local/webots/resources/web/streaming_viewer/index.html
 
 # Python deps used by the robonix driver processes that will be `docker
@@ -83,6 +83,7 @@ RUN sed -i \
 # Python imports resolve against this image's site-packages + the
 # bind-mounted package dirs under /robonix_pkgs.)
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
+RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools wheel
 RUN python3 -m pip install --no-cache-dir \
     "grpcio>=1.78.0" "protobuf>=6.30,<7" mcp "fastmcp>=3" numpy Pillow uvicorn httpx \
     "websockets>=14,<17"
@@ -94,6 +95,13 @@ ENV RMW_IMPLEMENTATION=rmw_zenoh_cpp
 WORKDIR /colcon_ws
 COPY ros_ws/src/eaios_webots src/eaios_webots
 RUN bash -lc "source /opt/ros/humble/setup.bash && colcon build --symlink-install --packages-select eaios_webots"
+
+# In WSL2, Docker containers inherit a Microsoft kernel string. The Webots
+# ROS 2 driver should still treat the container as Linux; otherwise it tries
+# Windows/WSL path and networking rules and the Webots controllers never attach.
+RUN sed -i \
+      "s/return 'microsoft-standard' in uname().release/return 'microsoft-standard' in uname().release and not is_docker()/" \
+    /opt/ros/humble/local/lib/python3.10/dist-packages/webots_ros2_driver/utils.py
 
 COPY bridge/entrypoint.sh /entrypoint.sh
 COPY bridge/viewer_server.py /viewer_server.py

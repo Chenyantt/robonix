@@ -58,6 +58,15 @@ services:
       ROS_DOMAIN_ID: "${ROS_DOMAIN_ID:-0}"
       ROBONIX_WEBOTS_WORLD: "${ROBONIX_WEBOTS_WORLD:-office.wbt}"
       ROBONIX_WEBOTS_ROBOT: "${ROBONIX_WEBOTS_ROBOT:-tiago_webots.urdf}"
+      # Runtime-only performance profile. The entrypoint copies the selected
+      # world/URDF inside the container and tweaks that copy, keeping repo
+      # source worlds intact. Set ROBONIX_WEBOTS_FAST_PROFILE=0 for baseline.
+      ROBONIX_WEBOTS_FAST_PROFILE: "${ROBONIX_WEBOTS_FAST_PROFILE:-1}"
+      ROBONIX_WEBOTS_FAST_BASIC_TIME_STEP: "${ROBONIX_WEBOTS_FAST_BASIC_TIME_STEP:-64}"
+      ROBONIX_WEBOTS_FAST_LIDAR_RESOLUTION: "${ROBONIX_WEBOTS_FAST_LIDAR_RESOLUTION:-330}"
+      ROBONIX_WEBOTS_FAST_CAMERA_UPDATE_RATE: "${ROBONIX_WEBOTS_FAST_CAMERA_UPDATE_RATE:-5}"
+      ROBONIX_WEBOTS_FAST_CONTROL_UPDATE_RATE: "${ROBONIX_WEBOTS_FAST_CONTROL_UPDATE_RATE:-15}"
+      ROBONIX_WEBOTS_FAST_DISABLE_WORLD_SHADOWS: "${ROBONIX_WEBOTS_FAST_DISABLE_WORLD_SHADOWS:-1}"
       # Headless render backend (host|nvidia|xvfb|auto) + display number,
       # forwarded so a deploy can pick GPU-backed offscreen rendering WITHOUT
       # the browser stream (compose.stream.yaml). Lets a CI run render on its

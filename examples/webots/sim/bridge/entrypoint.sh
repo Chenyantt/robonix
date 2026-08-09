@@ -334,6 +334,78 @@ prepare_full_webots_assets() {
   echo "[entrypoint] Webots full asset library ready: $(find "$cache_dir" -maxdepth 1 -type f | wc -l) cached files"
 }
 
+prepare_webots_fast_profile() {
+  if [ "${ROBONIX_WEBOTS_FAST_PROFILE:-0}" != "1" ]; then
+    return 0
+  fi
+
+  local share_dir worlds_dir resources_dir source_world fast_world world_base
+  local source_robot fast_robot robot_base
+  local basic_step lidar_resolution camera_rate control_rate control_params
+  share_dir="/colcon_ws/install/eaios_webots/share/eaios_webots"
+  worlds_dir="${share_dir}/worlds"
+  resources_dir="${share_dir}/resource"
+
+  mkdir -p /root/.config/Cyberbotics
+  cat >/root/.config/Cyberbotics/Webots-R2025a.conf <<'CONF'
+[%General]
+rendering=true
+startupMode=Real-time
+
+[OpenGL]
+GTAO=0
+disableAntiAliasing=true
+disableShadows=true
+textureFiltering=2
+textureQuality=3
+
+[Sound]
+mute=true
+CONF
+
+  world_base="$(basename "${ROBONIX_WEBOTS_WORLD}")"
+  source_world="${worlds_dir}/${world_base}"
+  fast_world="${worlds_dir}/${world_base%.wbt}.fast.wbt"
+  if [ ! -f "$source_world" ]; then
+    echo "[entrypoint] fast profile: world not found: ${source_world}" >&2
+    return 1
+  fi
+  cp "$source_world" "$fast_world"
+
+  basic_step="${ROBONIX_WEBOTS_FAST_BASIC_TIME_STEP:-64}"
+  perl -0pi -e "s/basicTimeStep\\s+\\d+/basicTimeStep ${basic_step}/" "$fast_world"
+  if [ "${ROBONIX_WEBOTS_FAST_DISABLE_WORLD_SHADOWS:-1}" = "1" ]; then
+    perl -0pi -e 's/\b(pointLightCastShadows|castShadows)\s+TRUE/$1 FALSE/g' "$fast_world"
+  fi
+  lidar_resolution="${ROBONIX_WEBOTS_FAST_LIDAR_RESOLUTION:-330}"
+  if [ -n "$lidar_resolution" ] && [ "$lidar_resolution" != "0" ]; then
+    perl -0pi -e "s/horizontalResolution\\s+\\d+/horizontalResolution ${lidar_resolution}/g" "$fast_world"
+  fi
+  ROBONIX_WEBOTS_WORLD="$(basename "$fast_world")"
+  export ROBONIX_WEBOTS_WORLD
+
+  robot_base="$(basename "${ROBONIX_WEBOTS_ROBOT}")"
+  source_robot="${resources_dir}/${robot_base}"
+  fast_robot="${resources_dir}/${robot_base%.urdf}.fast.urdf"
+  camera_rate="${ROBONIX_WEBOTS_FAST_CAMERA_UPDATE_RATE:-0}"
+  if [ -f "$source_robot" ] && [ -n "$camera_rate" ] && [ "$camera_rate" != "0" ]; then
+    cp "$source_robot" "$fast_robot"
+    perl -0pi -e '
+      s#(<device reference="(?:Astra rgb|Astra depth)" type="(?:Camera|RangeFinder)">\s*<ros>\s*)(?!<updateRate>)#$1<updateRate>$ENV{ROBONIX_WEBOTS_FAST_CAMERA_UPDATE_RATE}</updateRate>\n                #g
+    ' "$fast_robot"
+    ROBONIX_WEBOTS_ROBOT="$(basename "$fast_robot")"
+    export ROBONIX_WEBOTS_ROBOT
+  fi
+
+  control_rate="${ROBONIX_WEBOTS_FAST_CONTROL_UPDATE_RATE:-$((1000 / basic_step))}"
+  control_params="${resources_dir}/ros2_control.yml"
+  if [ -f "$control_params" ] && [ -n "$control_rate" ] && [ "$control_rate" != "0" ]; then
+    perl -0pi -e "s/update_rate:\\s*\\d+/update_rate: ${control_rate}/" "$control_params"
+  fi
+
+  echo "[entrypoint] fast profile enabled: world=${ROBONIX_WEBOTS_WORLD}, basicTimeStep=${basic_step}ms, lidarResolution=${lidar_resolution:-unchanged}, cameraRate=${camera_rate:-unchanged}, controlRate=${control_rate:-unchanged}Hz"
+}
+
 case "${WEBOTS_HEADLESS_MODE:-host}" in
   host)   : ;;                                # legacy: keep $DISPLAY from compose env
   nvidia) start_nvidia_xorg || exit 1 ;;
@@ -352,6 +424,7 @@ esac
 start_zenoh_router
 prepare_office_webots_seed
 prepare_full_webots_assets
+prepare_webots_fast_profile
 
 if [ "${WEBOTS_STREAM:-0}" = "1" ]; then
   start_stream_helpers

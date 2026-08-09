@@ -4,8 +4,9 @@
 # from examples/webots/ — robonix drivers are docker-exec'd into the
 # container started here, so the container has to exist first.
 #
-# Auto-detects nvidia-smi to merge compose.gpu.yaml. To force CPU-only,
-# unset CUDA_VISIBLE_DEVICES or set ROBONIX_FORCE_CPU=1.
+# Auto-detects WSLg/D3D12 or native NVIDIA to merge the matching GPU compose
+# override. To force CPU-only, unset CUDA_VISIBLE_DEVICES or set
+# ROBONIX_FORCE_CPU=1.
 #
 # Re-running is safe: docker compose up reuses the running container.
 # Stop with Ctrl-C, or from another terminal: `docker compose -f compose.yaml down`.
@@ -71,6 +72,7 @@ done
 
 echo "[sim/start] using Webots world: $ROBONIX_WEBOTS_WORLD"
 echo "[sim/start] using robot URDF: $ROBONIX_WEBOTS_ROBOT"
+echo "[sim/start] fast profile: ${ROBONIX_WEBOTS_FAST_PROFILE:-1} (basicTimeStep=${ROBONIX_WEBOTS_FAST_BASIC_TIME_STEP:-64}ms, lidar=${ROBONIX_WEBOTS_FAST_LIDAR_RESOLUTION:-330}, camera=${ROBONIX_WEBOTS_FAST_CAMERA_UPDATE_RATE:-5}Hz, control=${ROBONIX_WEBOTS_FAST_CONTROL_UPDATE_RATE:-15}Hz)"
 
 # Auto-detect DISPLAY if the launching shell didn't export one. Probes
 # the standard local X server slots via `xset q`; if any responds, use
@@ -112,12 +114,52 @@ if [[ ! -f "$ROBONIX_HOST_XAUTH" ]]; then
     fi
 fi
 
+docker_has_nvidia_runtime() {
+  docker info --format '{{json .Runtimes}}' 2>/dev/null | grep -q '"nvidia"'
+}
+
+nvidia_smi_cmd() {
+  if command -v nvidia-smi &>/dev/null; then
+    command -v nvidia-smi
+    return 0
+  fi
+  if [[ -x /usr/lib/wsl/lib/nvidia-smi ]]; then
+    echo /usr/lib/wsl/lib/nvidia-smi
+    return 0
+  fi
+  return 1
+}
+
+host_has_nvidia_gpu() {
+  local smi
+  smi="$(nvidia_smi_cmd)" || return 1
+  "$smi" &>/dev/null
+}
+
+wslg_gpu_available() {
+  [[ -c /dev/dxg ]] \
+    && [[ -d /mnt/wslg ]] \
+    && [[ -d /usr/lib/wsl ]] \
+    && host_has_nvidia_gpu
+}
+
 CF=(-f compose.yaml)
-if [[ "${ROBONIX_FORCE_CPU:-0}" != "1" ]] && command -v nvidia-smi &>/dev/null && nvidia-smi &>/dev/null; then
+if [[ "${ROBONIX_FORCE_CPU:-0}" != "1" ]] && wslg_gpu_available; then
+  CF+=(-f compose.wslg.yaml)
+  export WEBOTS_HEADLESS_MODE="${WEBOTS_HEADLESS_MODE:-host}"
+  export DISPLAY="${DISPLAY:-:0}"
+  export WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}"
+  export ROBONIX_WSLG_RUNTIME_DIR="${ROBONIX_WSLG_RUNTIME_DIR:-/mnt/wslg/runtime-dir}"
+  export ROBONIX_WSLG_LD_LIBRARY_PATH="${ROBONIX_WSLG_LD_LIBRARY_PATH:-/usr/lib/wsl/lib}"
+  export MESA_D3D12_DEFAULT_ADAPTER_NAME="${MESA_D3D12_DEFAULT_ADAPTER_NAME:-NVIDIA}"
+  echo "[sim/start] WSLg GPU detected - using D3D12 OpenGL via compose.wslg.yaml"
+elif [[ "${ROBONIX_FORCE_CPU:-0}" != "1" ]] \
+    && host_has_nvidia_gpu \
+    && docker_has_nvidia_runtime; then
   CF+=(-f compose.gpu.yaml)
   # Auto-select the GPU with most free memory unless user already set ROBONIX_GPU_ID.
   if [[ -z "${ROBONIX_GPU_ID:-}" ]]; then
-    ROBONIX_GPU_ID=$(nvidia-smi --query-gpu=index,memory.free --format=csv,noheader,nounits \
+    ROBONIX_GPU_ID=$(nvidia_smi_cmd | xargs -r -I{} {} --query-gpu=index,memory.free --format=csv,noheader,nounits \
       | sort -t',' -k2 -nr | head -1 | cut -d',' -f1 | tr -d ' ')
     export ROBONIX_GPU_ID
     echo "[sim/start] auto-selected GPU $ROBONIX_GPU_ID (most free memory)"
@@ -125,6 +167,12 @@ if [[ "${ROBONIX_FORCE_CPU:-0}" != "1" ]] && command -v nvidia-smi &>/dev/null &
     echo "[sim/start] using user-specified GPU $ROBONIX_GPU_ID"
   fi
 else
+  if [[ "${ROBONIX_FORCE_CPU:-0}" != "1" ]] \
+      && host_has_nvidia_gpu \
+      && ! docker_has_nvidia_runtime; then
+    echo "[sim/start] NVIDIA GPU detected, but Docker has no nvidia runtime; falling back to CPU-only Webots"
+    echo "[sim/start] To enable GPU containers, install/configure NVIDIA Container Toolkit for your Docker daemon."
+  fi
   echo "[sim/start] no GPU (or ROBONIX_FORCE_CPU=1) — CPU-only Webots"
 fi
 

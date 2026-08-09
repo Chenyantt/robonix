@@ -79,7 +79,12 @@ primitive:
   # Local ALSA provider. It remains available for robot-local audio.
   - name: audio_driver
     path: ./primitives/audio_driver
-    config: {}
+    config:
+      # WSL/headless hosts often expose no ALSA hardware. Keep the primitive
+      # bootable with ALSA's null plugin; real client audio uses
+      # audio_client_bridge below.
+      mic_device: "null"
+      speaker_device: "null"
   # Reverse bridge for a robonix-client audio route. It advertises its
   # endpoint through Atlas and waits for the client to connect, so neither
   # this manifest nor Liaison stores a client IP.

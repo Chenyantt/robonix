@@ -60,6 +60,26 @@ This downloads `assets-R2025a.zip` from the Webots GitHub release through
 download. Override `ROBONIX_WEBOTS_ASSETS_MIRROR` or `ROBONIX_WEBOTS_ASSETS_URL`
 only if your network needs a different mirror/source.
 
+By default the launcher enables a runtime-only fast profile. It copies the
+selected world and URDF inside the container, then runs the copy with a larger
+Webots `basicTimeStep`, lower lidar resolution, lower camera/depth update rate,
+matching ROS control update rate, and shadows disabled. The source `.wbt` and
+`.urdf` files in this repo are not modified. Disable it for baseline behavior:
+
+```bash
+ROBONIX_WEBOTS_FAST_PROFILE=0 bash examples/webots/sim/start.sh
+```
+
+Tune the profile without editing files:
+
+```bash
+ROBONIX_WEBOTS_FAST_BASIC_TIME_STEP=80 \
+ROBONIX_WEBOTS_FAST_LIDAR_RESOLUTION=220 \
+ROBONIX_WEBOTS_FAST_CAMERA_UPDATE_RATE=3 \
+ROBONIX_WEBOTS_FAST_CONTROL_UPDATE_RATE=12 \
+bash examples/webots/sim/start.sh
+```
+
 |  |  |
 |---|---|
 | `office.wbt`<br>![office](thumbnails/office.jpg) | `apartment.wbt`<br>![apartment](thumbnails/apartment.jpg) |
