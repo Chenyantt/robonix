@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: MulanPSL-2.0
+#
+# Optional merge: use WSLg's D3D12 OpenGL path for Webots rendering.
+# This is the right GPU backend for WSL2: the host exposes /dev/dxg and
+# /usr/lib/wsl/lib instead of a normal Linux /dev/nvidia0 display stack.
+
+services:
+  sim:
+    devices:
+      - /dev/dxg:/dev/dxg
+    environment:
+      WEBOTS_HEADLESS_MODE: "${WEBOTS_HEADLESS_MODE:-host}"
+      DISPLAY: "${DISPLAY:-:0}"
+      WAYLAND_DISPLAY: "${WAYLAND_DISPLAY:-wayland-0}"
+      XDG_RUNTIME_DIR: "${ROBONIX_WSLG_RUNTIME_DIR:-/mnt/wslg/runtime-dir}"
+      LD_LIBRARY_PATH: "${ROBONIX_WSLG_LD_LIBRARY_PATH:-/usr/lib/wsl/lib}"
+      MESA_D3D12_DEFAULT_ADAPTER_NAME: "${MESA_D3D12_DEFAULT_ADAPTER_NAME:-NVIDIA}"
+      PULSE_SERVER: "${PULSE_SERVER:-unix:/mnt/wslg/PulseServer}"
+    volumes:
+      - /mnt/wslg:/mnt/wslg:rw
+      - /usr/lib/wsl:/usr/lib/wsl:ro

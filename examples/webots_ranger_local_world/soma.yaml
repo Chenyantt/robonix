@@ -1,0 +1,86 @@
+urdf:
+  path: ./sim/ros_ws/src/eaios_webots/resource/ranger_mini_v3_webots.urdf
+  root_link: base_link
+  model_name: ranger_mini_v3_webots
+
+robot:
+  id: ranger_mini_v3_webots
+  display_name: "Webots Ranger Mini V3 mobile robot"
+  family: mobile_robot
+  root_part: base
+  dimensions: { length_m: 0.68, width_m: 0.56, height_m: 0.40 }
+  footprint:
+    base_frame: base_link
+    points:
+      - [0.34, 0.28]
+      - [0.34, -0.28]
+      - [-0.34, -0.28]
+      - [-0.34, 0.28]
+  mass_kg: 45.0
+  passable_door_width_m: 0.80
+  exports:
+    - provider_id: ranger_webots_nav2
+      capabilities:
+        - { path: robonix/service/navigation/navigate, description: "Navigate to a 2D goal in the mapped scene." }
+        - { path: robonix/service/navigation/navigate/status, description: "Report the current navigation goal status." }
+        - { path: robonix/service/navigation/navigate/cancel, description: "Cancel the active navigation goal." }
+    - provider_id: skill_explore_room
+      capabilities:
+        - { path: robonix/skill/explore/explore, description: "Run autonomous frontier exploration." }
+        - { path: robonix/skill/explore/explore/status, description: "Report the current exploration task status." }
+        - { path: robonix/skill/explore/explore/cancel, description: "Cancel the active exploration task." }
+  components:
+    - id: base
+      type: mobile_base
+      urdf_link: base_link
+      exports:
+        - provider_id: ranger_webots_chassis
+          capabilities:
+            - { path: robonix/primitive/chassis/move, description: "Command Ranger chassis motion through Webots ROS2 control." }
+            - { path: robonix/primitive/chassis/odom, description: "Read Ranger four-wheel-steering odometry." }
+            - { path: robonix/primitive/chassis/twist_in, description: "Accept velocity commands on the chassis command input." }
+      components:
+        - { id: front_left_wheel, type: wheel, urdf_joint: fl_wheel, exports: [] }
+        - { id: front_right_wheel, type: wheel, urdf_joint: fr_wheel, exports: [] }
+        - { id: rear_left_wheel, type: wheel, urdf_joint: rl_wheel, exports: [] }
+        - { id: rear_right_wheel, type: wheel, urdf_joint: rr_wheel, exports: [] }
+    - id: front_camera
+      type: rgbd_camera
+      urdf_link: head_front_camera_rgb_optical_frame
+      exports:
+        - provider_id: ranger_webots_camera
+          capabilities:
+            - { path: robonix/primitive/camera/snapshot, description: "Capture an RGB image from the Ranger front camera." }
+            - { path: robonix/primitive/camera/depth_snapshot, description: "Capture a registered depth image." }
+            - { path: robonix/primitive/camera/rgb, description: "Expose the RGB stream to mapping." }
+            - { path: robonix/primitive/camera/depth, description: "Expose the depth stream to mapping." }
+            - { path: robonix/primitive/camera/extrinsics, description: "Provide the camera transform relative to the base." }
+    - id: hokuyo_lidar
+      type: lidar_2d
+      urdf_link: hokuyo
+      exports:
+        - provider_id: ranger_webots_lidar
+          capabilities:
+            - { path: robonix/primitive/lidar/snapshot, description: "Capture a planar laser scan from the Ranger lidar." }
+    - id: audio
+      type: audio_io
+      exports:
+        - provider_id: ranger_webots_audio
+          capabilities:
+            - { path: robonix/primitive/audio/mic, description: "Stream microphone audio from the host." }
+            - { path: robonix/primitive/audio/speaker, description: "Play streamed audio through the host." }
+            - { path: robonix/primitive/audio/list_devices, description: "List available host audio devices." }
+            - { path: robonix/primitive/audio/select_device, description: "Select the active host audio device." }
+
+description:
+  summary: "A Webots Ranger Mini V3 deployment with four-wheel steering, RGB-D cameras, lidar, mapping, navigation, and exploration."
+  can_do:
+    - "Drive and pivot using four-wheel steering in the simulated local world."
+    - "Navigate to 2D goals using Ranger-sized collision geometry."
+    - "Capture RGB, depth, and planar lidar data."
+  cannot_do:
+    - "Manipulate objects; this Ranger model has no arm or gripper."
+    - "Control physical Ranger hardware."
+  notes:
+    - "Primitive package names retain their tiago_* compatibility names, but their ROS topics and geometry describe the Ranger simulation."
+    - "Start the Webots simulation before booting this deployment."

@@ -1,0 +1,34 @@
+# Webots local-world Tiago RTAB-Map parameters. This file is owned by this deployment.
+RGBD/CreateOccupancyGrid: true
+Grid/RangeMax: 6.0
+Grid/CellSize: 0.05
+Grid/RayTracing: true # when set to false, ghost points will exist on map - wheatfox 2026.7.19
+Grid/3D: false
+Grid/NormalsSegmentation: false
+Grid/MaxObstacleHeight: 1.0
+Grid/MaxGroundHeight: 0.1
+Reg/Strategy: 1
+Reg/Force3DoF: true
+Optimizer/Strategy: 1
+# Webots already provides deterministic odom -> base_link. In this largely
+# rectangular, repetitive room, ICP refinement can match a wall to the wrong
+# parallel wall and counter-rotate map -> odom while the robot is moving.
+# Keep graph neighbor poses anchored to chassis odometry instead.
+RGBD/NeighborLinkRefining: false
+RGBD/ProximityBySpace: false
+# RTAB-Map otherwise changes this to 10 when scan ICP is enabled, which still
+# creates proximity links from merged scans even with ProximityBySpace=false.
+RGBD/ProximityPathMaxNeighbors: 0
+# Repeated walls, windows and local OBJ textures produce visually similar
+# places. Disable visual loop constraints so they cannot rotate deterministic
+# Webots odometry; RGB-D data remains available to Scene and point clouds.
+Rtabmap/LoopThr: 1.0
+RGBD/AggressiveLoopThr: 1.0
+RGBD/AngularUpdate: 0.05
+RGBD/LinearUpdate: 0.05
+Mem/NotLinkedNodesKept: false
+Vis/MinInliers: 12
+Rtabmap/DetectionRate: 5.0
+Icp/MaxCorrespondenceDistance: 0.2
+Icp/MaxTranslation: 0.5
+Icp/MaxRotation: 0.78

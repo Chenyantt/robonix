@@ -1,0 +1,154 @@
+#VRML_SIM R2025a utf8
+EXTERNPROTO "./RangerMiniV3.proto"
+
+WorldInfo {
+  basicTimeStep 20
+  contactProperties [
+    ContactProperties {
+      coulombFriction [
+        0.8
+      ]
+    }
+  ]
+}
+Viewpoint {
+  orientation 0.29 0.08 -0.95 3.08
+  position 4.5 3.4 2.2
+}
+Background {
+  skyColor [
+    0.58 0.72 0.9
+  ]
+}
+DirectionalLight {
+  direction -0.5 -0.8 -1
+  intensity 1
+}
+
+Solid {
+  translation 0 0 -0.025
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.72 0.72 0.68
+        roughness 0.8
+      }
+      geometry Box {
+        size 10 8 0.05
+      }
+    }
+  ]
+  name "floor"
+  boundingObject Box {
+    size 10 8 0.05
+  }
+}
+Solid {
+  translation 0 4 0.8
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.78 0.78 0.82
+      }
+      geometry Box {
+        size 10 0.1 1.6
+      }
+    }
+  ]
+  name "north_wall"
+  boundingObject Box {
+    size 10 0.1 1.6
+  }
+}
+Solid {
+  translation 0 -4 0.8
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.78 0.78 0.82
+      }
+      geometry Box {
+        size 10 0.1 1.6
+      }
+    }
+  ]
+  name "south_wall"
+  boundingObject Box {
+    size 10 0.1 1.6
+  }
+}
+Solid {
+  translation 5 0 0.8
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.78 0.78 0.82
+      }
+      geometry Box {
+        size 0.1 8 1.6
+      }
+    }
+  ]
+  name "east_wall"
+  boundingObject Box {
+    size 0.1 8 1.6
+  }
+}
+Solid {
+  translation -5 0 0.8
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.78 0.78 0.82
+      }
+      geometry Box {
+        size 0.1 8 1.6
+      }
+    }
+  ]
+  name "west_wall"
+  boundingObject Box {
+    size 0.1 8 1.6
+  }
+}
+Solid {
+  translation 2.0 0.9 0.35
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.18 0.42 0.76
+      }
+      geometry Box {
+        size 0.8 1.2 0.7
+      }
+    }
+  ]
+  name "scan_obstacle_blue"
+  boundingObject Box {
+    size 0.8 1.2 0.7
+  }
+}
+Solid {
+  translation -1.8 -1.1 0.25
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.74 0.32 0.18
+      }
+      geometry Box {
+        size 1.4 0.5 0.5
+      }
+    }
+  ]
+  name "scan_obstacle_orange"
+  boundingObject Box {
+    size 1.4 0.5 0.5
+  }
+}
+
+DEF RangerMiniV3 RangerMiniV3 {
+  translation 0 0 0.35
+  rotation 0 0 1 0
+  name "RangerMiniV3"
+  controller "<extern>"
+}

@@ -1,0 +1,919 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Parquetry.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Wall.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Window.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Door.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/DoorLever.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/PaintedWood.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/lights/protos/CeilingLight.proto"
+EXTERNPROTO "./RangerMiniV3.proto"
+
+WorldInfo {
+  basicTimeStep 64
+  contactProperties [
+    ContactProperties {
+      material1 "ranger_tire"
+      material2 "floor"
+      coulombFriction [
+        1.2
+      ]
+      bounce 0
+      forceDependentSlip [
+        0
+      ]
+    }
+  ]
+}
+Viewpoint {
+  orientation -0.32490108422406355 0.07490005011332894 0.9427774222811284 2.713568827757154
+  position 3.4867903538461986 -2.85779169938736 7.302729132314609
+}
+Background {
+  skyColor [
+    0 0 0
+  ]
+}
+DirectionalLight {
+  ambientIntensity 0.55
+  direction -0.35 -0.45 -1
+  intensity 0.8
+  castShadows FALSE
+}
+Floor {
+  translation -4.75 1.7 0
+  contactMaterial "floor"
+  size 9.9 9.9
+  appearance Parquetry {
+    type "light strip"
+    textureTransform TextureTransform {
+      rotation 1.57
+      scale 0.42 0.42
+    }
+  }
+}
+Solid {
+  translation -4.75 1.7 0.015
+  name "floor_collision"
+  contactMaterial "floor"
+  boundingObject Box {
+    size 12 12 0.05
+  }
+}
+CeilingLight {
+  translation -4.75 1.7 3.85
+  rotation 1 0 0 4.692820414042842e-06
+  name "central ceiling light"
+  bulbColor 1 0.86 0.62
+  supportColor 0.533333 0.541176 0.521569
+  pointLightIntensity 5
+  pointLightCastShadows FALSE
+  castShadows FALSE
+}
+Wall {
+  translation -5.905 -3.3 0
+  rotation 0 0 1 1.5708
+  name "wall_0_left_of_door"
+  size 0.05 7.71 4
+}
+Door {
+  translation -1.55 -3.3 0
+  rotation 0 0 1 1.5708
+  name "door_near_table6"
+  size 0.05 1 2.4
+  canBeOpen FALSE
+  frameAppearance PaintedWood {
+    colorOverride 0.13333333333333333 0.06666666666666667 0.02
+  }
+  doorHandle DoorLever {
+    hasStaticParent TRUE
+  }
+}
+Wall {
+  translation -1.55 -3.3 2.4
+  rotation 0 0 1 1.5708
+  name "wall_0_door_header"
+  size 0.05 1 1.6
+}
+Wall {
+  translation -0.405 -3.3 0
+  rotation 0 0 1 1.5708
+  name "wall_0_right_of_door"
+  size 0.05 1.29 4
+}
+Wall {
+  translation 0.23632 1.68493 0
+  name "wall_1"
+  size 0.05 10 4
+}
+Wall {
+  translation -9.74 -2.025 0
+  name "wall_2_south_end"
+  size 0.05 2.57 4
+}
+Window {
+  translation -9.74 0.55 0
+  name "window_left_wall_south"
+  size 0.05 2.62 4
+  bottomWallHeight 0.85
+  windowHeight 2.05
+  frameAppearance PaintedWood {
+    colorOverride 0.13333333333333333 0.06666666666666667 0.02
+  }
+}
+Wall {
+  translation -9.74 2.6 0
+  name "wall_2_between_windows"
+  size 0.05 1.52 4
+}
+Window {
+  translation -9.74 4.65 0
+  name "window_left_wall_north"
+  size 0.05 2.62 4
+  bottomWallHeight 0.85
+  windowHeight 2.05
+  frameAppearance PaintedWood {
+    colorOverride 0.13333333333333333 0.06666666666666667 0.02
+  }
+}
+Wall {
+  translation -9.74 6.32 0
+  name "wall_2_north_end"
+  size 0.05 0.76 4
+}
+Wall {
+  translation -9.15 6.69 0
+  rotation 0 0 1 1.5708
+  name "wall_3_west_end"
+  size 0.05 1.22 4
+}
+Window {
+  translation -7.27 6.69 0
+  rotation 0 0 1 1.5708
+  name "window_back_wall_west"
+  size 0.05 2.58 4
+  bottomWallHeight 0.85
+  windowHeight 2.05
+  frameAppearance PaintedWood {
+    colorOverride 0.13333333333333333 0.06666666666666667 0.02
+  }
+}
+Wall {
+  translation -5.34 6.69 0
+  rotation 0 0 1 1.5708
+  name "wall_3_between_windows"
+  size 0.05 1.36 4
+}
+Window {
+  translation -3.06 6.69 0
+  rotation 0 0 1 1.5708
+  name "window_back_wall_east"
+  size 0.05 3.28 4
+  bottomWallHeight 0.85
+  windowHeight 2.05
+  frameAppearance PaintedWood {
+    colorOverride 0.13333333333333333 0.06666666666666667 0.02
+  }
+}
+Wall {
+  translation -0.59 6.69 0
+  rotation 0 0 1 1.5708
+  name "wall_3_east_end"
+  size 0.05 1.7 4
+}
+Solid {
+  translation -3.47 2.35 0.5455
+  rotation -0.5773509358554485 0.5773489358556708 0.5773509358554485 -2.094395307179586
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair1/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair1/object_0.obj"
+        ]
+      }
+    }
+  ]
+  name "chair1_1"
+}
+Solid {
+  translation -7.75588 6.15 0.5455
+  rotation 0.9351130202419243 0.25056300542381216 0.25056300542381216 1.63784
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair1/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair1/object_0.obj"
+        ]
+      }
+    }
+  ]
+  name "chair1_2"
+}
+Solid {
+  translation -7.02 6.28 0.5455
+  rotation 1 1.03407e-06 -2.39745e-09 1.5708
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair1/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair1/object_0.obj"
+        ]
+      }
+    }
+  ]
+  name "chair1_2(1)"
+}
+Solid {
+  translation -6.38197 6.12737 0.5455
+  rotation -0.9831058216896892 0.12942697652524895 0.12942797652506757 -1.5878353071795859
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair1/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair1/object_0.obj"
+        ]
+      }
+    }
+  ]
+  name "chair1_2(2)"
+}
+Solid {
+  translation -5.15047 5.93193 0.5455
+  rotation -0.9831058216896892 0.12942697652524895 0.12942797652506757 -1.5878353071795859
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair1/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair1/object_0.obj"
+        ]
+      }
+    }
+  ]
+  name "chair1_2(3)"
+}
+Solid {
+  translation -9.36 -0.7 0.5756
+  rotation 0.5773506025225371 0.5773496025232256 0.5773506025225371 2.0944
+  children [
+    Transform {
+      translation -0.07 0.12 0.18
+      scale 1.3 1.3 1.3
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/chair1/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/chair1/object_0.obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "chair1_3"
+}
+Solid {
+  translation -4.48 1.46 0.5455
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair2/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair2/object_0 (1).obj"
+        ]
+      }
+    }
+  ]
+  name "chair2_1"
+}
+Solid {
+  translation -5.26 1.46 0.5455
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair2/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair2/object_0 (1).obj"
+        ]
+      }
+    }
+  ]
+  name "chair2_2"
+}
+Solid {
+  translation -6.03 1.52 0.5455
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair2/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair2/object_0 (1).obj"
+        ]
+      }
+    }
+  ]
+  name "chair2_3"
+}
+Solid {
+  translation -0.99 4.71 0.549993
+  rotation -0.5773502691896258 0.5773502691896258 0.5773502691896258 -2.094395307179586
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair2/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair2/object_0 (1).obj"
+        ]
+      }
+    }
+  ]
+  name "chair2_4"
+}
+Solid {
+  translation -9.32 4.14 0.5455
+  rotation 0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair2/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair2/object_0 (1).obj"
+        ]
+      }
+    }
+  ]
+  name "chair2_5"
+}
+Solid {
+  translation -9.32 3.34 0.5455
+  rotation 0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair2/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair2/object_0 (1).obj"
+        ]
+      }
+    }
+  ]
+  name "chair2_6"
+}
+Solid {
+  translation -9.32 2.46 0.5455
+  rotation 0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair2/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair2/object_0 (1).obj"
+        ]
+      }
+    }
+  ]
+  name "chair2_7"
+}
+Solid {
+  translation -9.32 1.49 0.5455
+  rotation 0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair2/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair2/object_0 (1).obj"
+        ]
+      }
+    }
+  ]
+  name "chair2_8"
+}
+Solid {
+  translation -9.32 0.46 0.5455
+  rotation 0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
+  children [
+    Shape {
+      castShadows FALSE
+      appearance PBRAppearance {
+        baseColor 1 1 1
+        baseColorMap ImageTexture {
+          url [
+            "objs/chair2/image0.png"
+          ]
+        }
+        roughness 0.7
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "objs/chair2/object_0 (1).obj"
+        ]
+      }
+    }
+  ]
+  name "chair2_9"
+}
+Solid {
+  translation -5.08 -1.94 0.5255
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Transform {
+      translation 0.13 0.25 0
+      scale 1.4 1.4 1.4
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/chair3/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/chair3/object_0 (2).obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "chair3_1"
+}
+Solid {
+  translation -6.31 -2.09 0.499985
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Transform {
+      translation 0.13 0.25 0
+      scale 1.4 1.4 1.4
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/chair3/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/chair3/object_0 (2).obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "chair3_2"
+}
+Solid {
+  translation -7.68 -2.08 0.499985
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Transform {
+      translation 0.13 0.25 0
+      scale 1.4 1.4 1.4
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/chair3/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/chair3/object_0 (2).obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "chair3_3"
+}
+Solid {
+  translation -4.53 4.51 0.229994
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Transform {
+      translation -2.79 0.38 1.54275e-06
+      rotation 0 1 0 1.5708
+      scale 1 2 2.5
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/table1/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/table1/object_0 (3).obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "table1"
+}
+Solid {
+  translation -5.39 2.39 0.5345
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Transform {
+      translation 0 0 0.27
+      scale 3 3 4
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/table2/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/table2/object_0 (6).obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "table2"
+}
+Solid {
+  translation -5.39 -0.75 0.4166
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Transform {
+      translation 0.38 0.14 0
+      scale 2 2 3
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/table3/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/table3/object_0 (7).obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "table3"
+}
+Solid {
+  translation -5.77 -0.75 0.4547
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Transform {
+      translation 2.65 0.14 2.91
+      rotation 0 1 0 1.5708
+      scale 5 4 4
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/table4/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/table4/object_0 (8).obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "table4"
+}
+Solid {
+  translation -5.77 -0.75 0.4547
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Transform {
+      translation 0.58471 0.07 5.9156
+      rotation 0 1 0 -3.1415853071795863
+      scale 2 4 2
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/table5/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/table5/object_0 (9).obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "table5"
+}
+Solid {
+  translation -3.63 0.84 0.6202
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Transform {
+      translation -0.01 0.38 -3.44
+      rotation 0 1 0 -3.1415853071795863
+      scale 2 4 4
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/table1/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/table1/object_0 (3).obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "table6"
+}
+Solid {
+  translation -5.27 4.51 1.1657
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Transform {
+      translation -4.64412 0.38 1.42847
+      rotation 0 1 0 2.0944
+      scale 2.5 3 3
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/refri/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/refri/object_0 (4).obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "refri"
+}
+Solid {
+  translation -5.05 1.84 1.1641
+  rotation 5.085758426212298e-09 0.70710578118615 0.707107781185531 3.14159
+  children [
+    Transform {
+      translation -1.82725 0.38 3.78347
+      rotation 0 1 0 -3.1415853071795863
+      scale 2.5 3 3
+      children [
+        Shape {
+          castShadows FALSE
+          appearance PBRAppearance {
+            baseColor 1 1 1
+            baseColorMap ImageTexture {
+              url [
+                "objs/board/image0.png"
+              ]
+            }
+            roughness 0.7
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "objs/board/object_0 (5).obj"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+  name "board"
+}
+
+RangerMiniV3 {
+  translation -1.8 0.3 0.35
+  rotation 0 0 1 3.14159
+  name "my_robot"
+  controller "<extern>"
+}

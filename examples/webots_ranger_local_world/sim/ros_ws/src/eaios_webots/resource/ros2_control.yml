@@ -1,0 +1,55 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50  # Hz
+
+    four_wheel_steering_controller:
+      type: four_wheel_steering_controller/FourWheelSteeringController
+    
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    
+four_wheel_steering_controller:
+  ros__parameters:
+    front_left_wheel: fl_wheel
+    front_right_wheel: fr_wheel
+    rear_left_wheel: rl_wheel
+    rear_right_wheel: rr_wheel
+    front_left_steering: fl_steering_joint
+    front_right_steering: fr_steering_joint
+    rear_left_steering: rl_steering_joint
+    rear_right_steering: rr_steering_joint
+    chassis_type: all # all-四舵轮(全), flrr-四舵轮(前左fl,后右rr), frrl-四舵轮(前右fr,后左rl)
+
+    # Steering pivots in RangerMiniV3.proto average 0.388 m apart. The wheel
+    # joints have no lateral offset from those pivots.
+    track: 0.388
+    wheel_radius: 0.09
+    wheel_base: 0.490102
+    wheel_steering_y_offset: 0.0
+
+    publish_rate: 50.0
+    open_loop: true
+    enable_odom_tf: true
+    cmd_vel_timeout: 1.0
+    odom_frame_id: odom
+    base_frame_id: base_link
+    # Continuous steering avoids stop/start wheel commands whenever Nav2 makes
+    # a small angular-velocity correction.
+    wait_for_angle: false
+    min_steering_diff: 0.05
+    stop_no_adjust_steering: true
+
+    # Velocity and acceleration limits
+    # Whenever a min_* is unspecified, default to -max_*
+    "linear/x/has_velocity_limits": true
+    "linear/x/max_velocity": 1.667  # m/s
+    "linear/x/min_velocity": -1.667 # m/s
+    "linear/x/has_acceleration_limits": true
+    "linear/x/max_acceleration": 1.0  # m/s^2
+    "linear/x/min_acceleration": -1.0 # m/s^2
+    "angular/z/has_velocity_limits": true
+    "angular/z/max_velocity": 3.14  # rad/s
+    "angular/z/min_velocity": -3.14
+    "angular/z/has_acceleration_limits": true
+    "angular/z/max_acceleration": 1.0  # rad/s^2
+    "angular/z/min_acceleration": -1.0

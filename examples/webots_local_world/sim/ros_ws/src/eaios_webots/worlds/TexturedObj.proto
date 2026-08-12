@@ -1,0 +1,21 @@
+#VRML_SIM R2025a utf8
+
+PROTO TexturedObj [
+  field MFString url []
+  field MFString textureUrl []
+  field SFBool castShadows TRUE
+] {
+  Shape {
+    castShadows IS castShadows
+    appearance PBRAppearance {
+      baseColorMap ImageTexture {
+        url IS textureUrl
+      }
+      roughness 0.7
+      metalness 0
+    }
+    geometry Mesh {
+      url IS url
+    }
+  }
+}
